@@ -1,70 +1,109 @@
-/* style.css */
-
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
+    color: #333;
+}
+
+header {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ccc;
+}
+
+.header-left {
+    display: flex;
     align-items: center;
 }
 
-h1 {
-    color: #333;
-    margin: 20px 0;
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
-ul {
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.date {
+    margin-right: 10px;
+}
+
+.calendar-btn {
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+main {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.task-list,
+.important-task,
+.stats {
+    width: 30%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.task-list ul {
     list-style-type: none;
     padding: 0;
 }
 
-li {
+.task-list li {
     padding: 5px 0;
 }
 
-.container {
-    background-color: white;
-    padding: 20px;
+.btn {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    border: none;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 600px;
-    margin-top: 20px;
+    text-decoration: none;
 }
 
-button, .button {
-    background-color: #4CAF50;
+footer {
+    padding: 10px;
+    text-align: center;
+    background-color: #f4f4f4;
+    border-top: 1px solid #ccc;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.toggle-mode {
+    padding: 10px 20px;
+    background-color: #007bff;
     color: white;
     border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 10px 5px;
     border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover, .button:hover {
-    background-color: #45a049;
 }
 
 nav {
-    margin-top: 20px;
+    background-color: #007bff;
+    padding: 10px;
+    text-align: center;
 }
 
 nav a {
-    text-decoration: none;
     color: white;
-    background-color: #4CAF50;
-    padding: 10px 20px;
-    border-radius: 5px;
-    margin: 5px;
+    text-decoration: none;
+    margin: 0 10px;
 }
 
 nav a:hover {
-    background-color: #45a049;
+    text-decoration: underline;
 }

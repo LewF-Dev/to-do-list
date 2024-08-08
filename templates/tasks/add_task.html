@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
+    <nav>
+        <a href="{% url 'index' %}">Home</a>
+        <a href="{% url 'add_task' %}">Add Task</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+    
     <div class="container">
         <h1>Add Task</h1>
         <form method="post" enctype="multipart/form-data">
@@ -16,8 +22,5 @@
             <button type="submit">Add Task</button>
         </form>
     </div>
-    <nav>
-        <a href="{% url 'index' %}">Back to Task List</a>
-    </nav>
 </body>
 </html>

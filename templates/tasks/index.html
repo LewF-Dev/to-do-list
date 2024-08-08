@@ -8,21 +8,47 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <div class="container">
-        <h1>Tasks</h1>
-        <ul>
-            {% for task in tasks %}
-                <li>{{ task.title }} - {{ task.description }}
+    <header>
+        <div class="header-left">
+            <img src="path_to_profile_image.jpg" alt="Profile Picture" class="profile-pic">
+            <h1>Tasks</h1>
+        </div>
+        <div class="header-right">
+            <span class="date">{{ current_date }}</span>
+            <button class="calendar-btn">📅</button>
+        </div>
+        <nav>
+            <a href="{% url 'index' %}">Home</a>
+            <a href="{% url 'add_task' %}">Add Task</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </nav>
+        
+    </header>
+    <main>
+        <section class="task-list">
+            <ul>
+                {% for task in tasks %}
+                <li>
+                    {{ task.title }} - {{ task.description }}
                     {% if task.image %}
-                        <img src="{{ task.image.url }}" alt="{{ task.title }}">
+                    <img src="{{ task.image.url }}" alt="{{ task.title }}">
                     {% endif %}
                 </li>
-            {% endfor %}
-        </ul>
-        <a href="{% url 'add_task' %}" class="button">Add Task</a>
-    </div>
-    <nav>
-        <a href="{% url 'logout' %}">Logout</a>
-    </nav>
+                {% endfor %}
+            </ul>
+            <a href="{% url 'add_task' %}" class="btn">Add Task</a>
+        </section>
+        <section class="important-task">
+            <h2>Most Important Task</h2>
+            <p>{{ important_task }}</p>
+        </section>
+        <section class="stats">
+            <h2>Performance Based Statistics</h2>
+            <!-- Add statistics here -->
+        </section>
+    </main>
+    <footer>
+        <button class="toggle-mode">Light/Dark Mode</button>
+    </footer>
 </body>
 </html>
