@@ -11,7 +11,11 @@
     <h1>Tasks</h1>
     <ul>
         {% for task in tasks %}
-            <li>{{ task.title }} - {{ task.description }} <img src="{{ task.image.url }}" alt="{{ task.title }}"></li>
+            <li>{{ task.title }} - {{ task.description }}
+                {% if task.image %}
+                    <img src="{{ task.image.url }}" alt="{{ task.title }}">
+                {% endif %}
+            </li>
         {% endfor %}
     </ul>
     <a href="{% url 'add_task' %}">Add Task</a>
