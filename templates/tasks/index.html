@@ -8,16 +8,21 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>Tasks</h1>
-    <ul>
-        {% for task in tasks %}
-            <li>{{ task.title }} - {{ task.description }}
-                {% if task.image %}
-                    <img src="{{ task.image.url }}" alt="{{ task.title }}">
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'add_task' %}">Add Task</a>
+    <div class="container">
+        <h1>Tasks</h1>
+        <ul>
+            {% for task in tasks %}
+                <li>{{ task.title }} - {{ task.description }}
+                    {% if task.image %}
+                        <img src="{{ task.image.url }}" alt="{{ task.title }}">
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'add_task' %}" class="button">Add Task</a>
+    </div>
+    <nav>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
 </body>
 </html>
