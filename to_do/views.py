@@ -1,13 +1,17 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm  # Add this import
+from django.views.generic import TemplateView  # Add this import
 from .models import Task
 from .forms import TaskForm
 
 class HomePage(TemplateView):
-    """
-    Displays home page
-    """
     template_name = 'index.html'
+
+@login_required
+def index(request):
+    tasks = Task.objects.filter(user=request.user)
+    return render(request, 'tasks/index.html', {'tasks': tasks})
 
 @login_required
 def add_task(request):
@@ -21,3 +25,13 @@ def add_task(request):
     else:
         form = TaskForm()
     return render(request, 'tasks/add_task.html', {'form': form})
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
