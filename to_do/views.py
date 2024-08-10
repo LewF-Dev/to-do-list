@@ -62,3 +62,17 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+@login_required
+def index(request):
+    tasks = Task.objects.filter(user=request.user)
+    selected_date = request.GET.get('date')
+    if selected_date:
+        tasks = tasks.filter(date=selected_date)  # Filter tasks by the selected date
+    current_date = datetime.now().strftime('%d / %m / %Y')
+    important_task = "Most important task description"
+    return render(request, 'tasks/index.html', {
+        'tasks': tasks,
+        'current_date': current_date,
+        'important_task': important_task
+    })
