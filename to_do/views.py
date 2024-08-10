@@ -1,21 +1,36 @@
+import json
+from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import TemplateView
+from django.urls import reverse
 from .models import Task
 from .forms import TaskForm
 from datetime import datetime
 
-class HomePage(TemplateView):
-    template_name = 'index.html'
-
 @login_required
 def index(request):
     tasks = Task.objects.filter(user=request.user)
+    selected_date = request.GET.get('date')
+    if selected_date:
+        tasks = tasks.filter(date=selected_date)  # Filter tasks by the selected date
+
+    # Convert tasks to a JSON format for FullCalendar
+    events = [
+        {
+            "title": task.title,
+            "start": task.date.strftime('%Y-%m-%d'),  # format the date to 'YYYY-MM-DD'
+            "url": reverse('edit_task', args=[task.id])
+        }
+        for task in tasks
+    ]
+    events_json = json.dumps(events, cls=DjangoJSONEncoder)
+
     current_date = datetime.now().strftime('%d / %m / %Y')
-    important_task = "Most important task description"  # You should replace this with actual logic
+    important_task = "Most important task description"  # Replace this with actual logic
     return render(request, 'tasks/index.html', {
         'tasks': tasks,
+        'events_json': events_json,
         'current_date': current_date,
         'important_task': important_task
     })
@@ -62,17 +77,3 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
-
-@login_required
-def index(request):
-    tasks = Task.objects.filter(user=request.user)
-    selected_date = request.GET.get('date')
-    if selected_date:
-        tasks = tasks.filter(date=selected_date)  # Filter tasks by the selected date
-    current_date = datetime.now().strftime('%d / %m / %Y')
-    important_task = "Most important task description"
-    return render(request, 'tasks/index.html', {
-        'tasks': tasks,
-        'current_date': current_date,
-        'important_task': important_task
-    })
