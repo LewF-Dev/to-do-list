@@ -1,26 +1,17 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Task</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <nav>
-        <a href="{% url 'index' %}">Home</a>
-        <a href="{% url 'add_task' %}">Add Task</a>
-        <a href="{% url 'logout' %}">Logout</a>
-    </nav>
-    
-    <div class="container">
+<!-- templates/tasks/add_task.html -->
+{% extends 'base.html' %}
+
+{% block title %}Add Task{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
         <h1>Add Task</h1>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Add Task</button>
+            <button type="submit" class="btn btn-primary">Add Task</button>
         </form>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

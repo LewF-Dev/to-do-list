@@ -3,75 +3,41 @@ body {
     color: #333;
 }
 
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 10px;
     background-color: #f4f4f4;
     border-bottom: 1px solid #ccc;
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-}
-
-.profile-pic {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
+header .h1 {
+    font-size: 1.75rem;
 }
 
 .date {
     margin-right: 10px;
 }
 
-.calendar-btn {
-    padding: 5px 10px;
+.task-list li {
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.task-list li strong {
     font-size: 16px;
 }
 
-main {
-    display: flex;
-    justify-content: space-around;
-    padding: 20px;
-}
-
-.task-list,
-.important-task,
-.stats {
-    width: 30%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.task-list ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.task-list li {
-    padding: 5px 0;
-}
-
-.btn {
-    display: block;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    text-align: center;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
+.task-list li span {
+    font-size: 14px;
+    color: #666;
 }
 
 footer {
@@ -92,18 +58,33 @@ footer {
     border-radius: 5px;
 }
 
-nav {
-    background-color: #007bff;
-    padding: 10px;
-    text-align: center;
+/* Responsive Adjustments */
+@media (max-width: 767.98px) {
+    .profile-pic {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .task-list li {
+        font-size: 14px;
+    }
+
+    .task-list .btn {
+        padding: 2px 8px;
+        font-size: 10px;
+    }
 }
 
-nav a {
-    color: white;
-    text-decoration: none;
-    margin: 0 10px;
-}
+@media (max-width: 991.98px) {
+    .header-left,
+    .header-right {
+        width: 100%;
+        justify-content: center;
+    }
 
-nav a:hover {
-    text-decoration: underline;
+    .task-list,
+    .important-task,
+    .stats {
+        width: 100%;
+    }
 }
