@@ -7,6 +7,7 @@ from django.urls import reverse
 from .models import Task
 from .forms import TaskForm
 from datetime import datetime
+from .fetch_holidays import fetch_holidays  # Import the fetch_holidays function
 
 @login_required
 def index(request):
@@ -26,6 +27,27 @@ def index(request):
         }
         for task in tasks
     ]
+
+    # Fetch holidays using the fetch_holidays function
+    api_key = "8XGSItroiyWeOXGrvak1jgPrJflsnpxr"  # Replace with your actual Calendarific API key
+    country_code = "GB"  # Replace with the appropriate country code
+    holidays = fetch_holidays(api_key, country_code)
+
+    if holidays:
+        # Convert holidays to the same event format
+        holiday_events = [
+            {
+                "title": holiday['name'],
+                "start": holiday['date']['iso'],  # Use the ISO date format
+                "description": holiday['description'] if 'description' in holiday else 'Holiday',  # Use description if available
+                "backgroundColor": "#ff9f89",  # Example color for holiday events
+                "borderColor": "#ff9f89",  # Example border color for holiday events
+                "textColor": "#000000",  # Example text color for holiday events
+            }
+            for holiday in holidays
+        ]
+        events.extend(holiday_events)  # Add holiday events to the existing events list
+
     events_json = json.dumps(events, cls=DjangoJSONEncoder)
 
     current_date = datetime.now().strftime('%d / %m / %Y')

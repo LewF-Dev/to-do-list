@@ -93,6 +93,8 @@
     // Parse the JSON passed from the view
     var events = JSON.parse('{{ events_json|escapejs }}');
 
+
+    console.log(events);
     // Initialize the calendar with the events
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -113,6 +115,15 @@
             // Show the modal
             var myModal = new bootstrap.Modal(document.getElementById('taskDetailsModal'));
             myModal.show();
+        },
+        eventRender: function(info) {
+            // Customize the event appearance if needed
+            if (info.event.extendedProps.isHoliday) {
+                // Example: set a specific color for holidays
+                info.el.style.backgroundColor = '#ff9f89';
+                info.el.style.borderColor = '#ff9f89';
+                info.el.style.color = '#000000';
+            }
         }
     });
 
