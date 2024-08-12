@@ -8,6 +8,7 @@ class Task(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='tasks/', blank=True, null=True)
     date = models.DateField(default=datetime.now)  # This line is already correct
+    completed = models.BooleanField(default=False)  # Add this line
 
     def __str__(self):
         return self.title

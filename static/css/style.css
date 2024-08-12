@@ -40,6 +40,29 @@ header .h1 {
     color: #666;
 }
 
+/* Updated CSS for Complete button */
+.task-list .btn-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Align buttons to stretch and take the full width */
+}
+
+.task-list .btn-group .btn {
+    width: 100%; /* Make all buttons in the group take full width */
+    margin-bottom: 5px; /* Add some space between the buttons */
+}
+
+.task-list .btn-group .btn-complete {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+.task-list .btn-group .btn-complete:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
 footer {
     padding: 10px;
     text-align: center;
@@ -50,12 +73,42 @@ footer {
     width: 100%;
 }
 
-.toggle-mode {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
+/* Task Details Modal Adjustments */
+.modal-body {
+    background-color: #f9f9f9;
+    padding: 20px;
     border-radius: 5px;
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 60px; /* Add bottom margin to avoid content being hidden behind buttons */
+}
+
+#taskTitle {
+    font-size: 1.5rem; /* Larger font size for title */
+    margin-bottom: 10px;
+}
+
+#taskDescription, #taskDate {
+    font-size: 1.2rem; /* Larger font size for description and date */
+}
+
+#editTaskBtn, #deleteTaskBtn {
+    font-size: 1rem; /* Button font size */
+    padding: 12px 20px; /* Button padding */
+    width: 48%;
+    margin: 5px 1%;
+    border-radius: 5px;
+}
+
+/* Position the buttons side by side at the bottom */
+.modal-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    background-color: #fff;
 }
 
 /* Responsive Adjustments */
@@ -73,6 +126,38 @@ footer {
         padding: 2px 8px;
         font-size: 10px;
     }
+
+    #taskTitle {
+        font-size: 1.75rem; /* Slightly larger for mobile */
+    }
+
+    #taskDescription, #taskDate {
+        font-size: 1.4rem; /* Larger font size for mobile */
+    }
+
+    #editTaskBtn, #deleteTaskBtn {
+        font-size: 1.2rem; /* Slightly larger for mobile */
+        padding: 10px 15px;
+    }
+
+    .modal-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+@media (min-width: 768px) {
+    #editTaskBtn, #deleteTaskBtn {
+        font-size: 1rem; /* Smaller font size for desktop */
+        padding: 10px 15px; /* Less padding for desktop */
+    }
+
+    .modal-footer {
+        position: relative;
+    }
 }
 
 @media (max-width: 991.98px) {
@@ -86,5 +171,74 @@ footer {
     .important-task,
     .stats {
         width: 100%;
+    }
+}
+
+/* FullCalendar Adjustments */
+.fc-button {
+    margin: 0.3rem; /* Adds spacing around the buttons */
+}
+
+.fc-toolbar-title {
+    font-weight: 600; /* Slightly bold */
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.fc-toolbar.fc-header-toolbar {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.modal-dialog {
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    height: 100%;
+}
+
+.modal-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.fc {
+    box-sizing: border-box;
+}
+
+.fc .fc-toolbar-chunk {
+    display: block;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.fc-view {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Style for the Back to Tasks button */
+.back-button-wrapper {
+    position: fixed;
+    bottom: 20px; /* Position towards the bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%; /* Adjust the width as needed */
+}
+
+.back-button-wrapper .btn {
+    width: 100%; /* Ensure the button takes up the full width of the wrapper */
+}
+
+/* Adjust button size for phone displays */
+@media (max-width: 767.98px) {
+    .back-button-wrapper {
+        width: 80%; /* Further increase the width to 80% for phone displays */
+    }
+
+    .back-button-wrapper .btn {
+        padding: 10px 15px; /* Increase padding for a larger button on mobile */
+        font-size: 1.2rem; /* Increase font size for better readability on mobile */
     }
 }

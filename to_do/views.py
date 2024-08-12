@@ -10,7 +10,7 @@ from datetime import datetime
 
 @login_required
 def index(request):
-    tasks = Task.objects.filter(user=request.user)
+    tasks = Task.objects.filter(user=request.user, completed=False)  # Filter out completed tasks
     selected_date = request.GET.get('date')
     if selected_date:
         tasks = tasks.filter(date=selected_date)  # Filter tasks by the selected date
@@ -20,7 +20,9 @@ def index(request):
         {
             "title": task.title,
             "start": task.date.strftime('%Y-%m-%d'),  # format the date to 'YYYY-MM-DD'
-            "url": reverse('edit_task', args=[task.id])
+            "description": task.description,  # Add description here
+            "editUrl": reverse('edit_task', args=[task.id]),  # Add edit URL
+            "deleteUrl": reverse('delete_task', args=[task.id])  # Add delete URL
         }
         for task in tasks
     ]
@@ -34,6 +36,18 @@ def index(request):
         'current_date': current_date,
         'important_task': important_task
     })
+
+@login_required
+def complete_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id, user=request.user)
+    task.completed = True
+    task.save()
+    return redirect('index')
+
+@login_required
+def completed_tasks(request):
+    tasks = Task.objects.filter(user=request.user, completed=True)  # Get only completed tasks
+    return render(request, 'tasks/completed_tasks.html', {'tasks': tasks})
 
 @login_required
 def add_task(request):

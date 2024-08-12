@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Completed Tasks{% endblock %}
+
+{% block content %}
+<header class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+    <h1 class="h3">Completed Tasks</h1>
+</header>
+
+<main class="row g-3">
+    <section class="task-list col-lg-8 col-md-10 col-12">
+        <ul class="list-group">
+            {% for task in tasks %}
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                    <strong>{{ task.title }}</strong><br>
+                    <span class="text-muted">{{ task.date }}</span><br>
+                    <span>{{ task.description }}</span>
+                </div>
+                <span class="btn-group">
+                    <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+        <!-- Wrap the button inside a div -->
+        <div class="back-button-wrapper">
+            <a href="{% url 'index' %}" class="btn btn-primary mt-3 w-100">Back to Tasks</a>
+        </div>
+    </section>
+</main>
+{% endblock %}

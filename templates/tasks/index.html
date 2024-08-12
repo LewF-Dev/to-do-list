@@ -27,6 +27,7 @@
                 <span class="btn-group">
                     <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
                     <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    <a href="{% url 'complete_task' task.id %}" class="btn btn-sm btn-outline-success btn-complete">Complete</a>
                 </span>
             </li>
             {% endfor %}
@@ -58,6 +59,27 @@
     </div>
 </div>
 
+<!-- Task Details Modal -->
+<div class="modal fade" id="taskDetailsModal" tabindex="-1" aria-labelledby="taskDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskDetailsModalLabel">Task Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h5 id="taskTitle"></h5>
+        <p id="taskDescription"></p>
+        <p><strong>Date:</strong> <span id="taskDate"></span></p>
+        <div class="d-flex justify-content-between">
+          <a href="#" id="editTaskBtn" class="btn btn-primary">Edit</a>
+          <a href="#" id="deleteTaskBtn" class="btn btn-danger">Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer class="text-center mt-4">
     <button class="toggle-mode btn btn-primary">Light/Dark Mode</button>
 </footer>
@@ -74,7 +96,24 @@
     // Initialize the calendar with the events
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        events: events // Pass the events array here
+        events: events, 
+        eventClick: function(info) {
+            // Prevent the default action
+            info.jsEvent.preventDefault();
+
+            // Set the modal content
+            document.getElementById('taskTitle').innerText = info.event.title;
+            document.getElementById('taskDescription').innerText = info.event.extendedProps.description || 'No description available.';
+            document.getElementById('taskDate').innerText = info.event.start.toISOString().split('T')[0];
+
+            // Set the href for the Edit and Delete buttons
+            document.getElementById('editTaskBtn').href = info.event.extendedProps.editUrl;
+            document.getElementById('deleteTaskBtn').href = info.event.extendedProps.deleteUrl;
+
+            // Show the modal
+            var myModal = new bootstrap.Modal(document.getElementById('taskDetailsModal'));
+            myModal.show();
+        }
     });
 
     calendar.render();
