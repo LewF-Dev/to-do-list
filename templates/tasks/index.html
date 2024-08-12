@@ -14,35 +14,39 @@
     </div>
 </header>
 
-<main class="row g-3">
-    <section class="task-list col-lg-4 col-md-6 col-12">
-        <ul class="list-group">
-            {% for task in tasks %}
-            <li class="list-group-item d-flex justify-content-between align-items-start">
-                <div>
-                    <strong>{{ task.title }}</strong><br>
-                    <span class="text-muted">{{ task.date }}</span><br>
-                    <span>{{ task.description }}</span>
-                </div>
-                <span class="btn-group">
-                    <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                    <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
-                    <a href="{% url 'complete_task' task.id %}" class="btn btn-sm btn-outline-success btn-complete">Complete</a>
-                </span>
-            </li>
-            {% endfor %}
-        </ul>
-        <a href="{% url 'add_task' %}" class="btn btn-primary mt-3 w-100">Add Task</a>
-    </section>
-    <section class="important-task col-lg-4 col-md-6 col-12">
-        <h2>Most Important Task</h2>
-        <p>{{ important_task }}</p>
-    </section>
-    <section class="stats col-lg-4 col-12">
-        <h2>Performance Based Statistics</h2>
-        <!-- Add statistics here -->
-    </section>
-</main>
+<div class="task-list-container">
+    <main class="row g-3">
+        <section class="task-list col-lg-4 col-md-6 col-12">
+            <ul class="list-group">
+                {% for task in tasks %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div>
+                        <strong>{{ task.title }}</strong><br>
+                        <span class="text-muted">{{ task.date }}</span><br>
+                        <span>{{ task.description }}</span>
+                    </div>
+                    <span class="btn-group">
+                        <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                        <a href="{% url 'complete_task' task.id %}" class="btn btn-sm btn-outline-success btn-complete">Complete</a>
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="add-task-button">
+                <a href="{% url 'add_task' %}?date={{ selected_date }}" class="btn btn-primary w-100">Add Task</a>
+            </div>
+        </section>
+        <section class="important-task col-lg-4 col-md-6 col-12">
+            <h2>Most Important Task</h2>
+            <p>{{ important_task }}</p>
+        </section>
+        <section class="stats col-lg-4 col-12">
+            <h2>Performance Based Statistics</h2>
+            <!-- Add statistics here -->
+        </section>
+    </main>
+</div>
 
 <!-- Calendar Modal -->
 <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
@@ -87,47 +91,50 @@
 
 {% block extra_js %}
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-
-    // Parse the JSON passed from the view
-    var events = JSON.parse('{{ events_json|escapejs }}');
-
-
-    console.log(events);
-    // Initialize the calendar with the events
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        events: events, 
-        eventClick: function(info) {
-            // Prevent the default action
-            info.jsEvent.preventDefault();
-
-            // Set the modal content
-            document.getElementById('taskTitle').innerText = info.event.title;
-            document.getElementById('taskDescription').innerText = info.event.extendedProps.description || 'No description available.';
-            document.getElementById('taskDate').innerText = info.event.start.toISOString().split('T')[0];
-
-            // Set the href for the Edit and Delete buttons
-            document.getElementById('editTaskBtn').href = info.event.extendedProps.editUrl;
-            document.getElementById('deleteTaskBtn').href = info.event.extendedProps.deleteUrl;
-
-            // Show the modal
-            var myModal = new bootstrap.Modal(document.getElementById('taskDetailsModal'));
-            myModal.show();
-        },
-        eventRender: function(info) {
-            // Customize the event appearance if needed
-            if (info.event.extendedProps.isHoliday) {
-                // Example: set a specific color for holidays
-                info.el.style.backgroundColor = '#ff9f89';
-                info.el.style.borderColor = '#ff9f89';
-                info.el.style.color = '#000000';
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+    
+        // Parse the JSON passed from the view
+        var events = JSON.parse('{{ events_json|escapejs }}');
+    
+        // Initialize the calendar with the events
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: events, 
+            dateClick: function(info) {
+                // Redirect to the page that shows tasks for the selected date
+                var selectedDate = info.dateStr; // Format: YYYY-MM-DD
+                window.location.href = '{% url "index" %}?date=' + selectedDate;
+            },
+            eventClick: function(info) {
+                // Prevent the default action
+                info.jsEvent.preventDefault();
+    
+                // Set the modal content
+                document.getElementById('taskTitle').innerText = info.event.title;
+                document.getElementById('taskDescription').innerText = info.event.extendedProps.description || 'No description available.';
+                document.getElementById('taskDate').innerText = info.event.start.toISOString().split('T')[0];
+    
+                // Set the href for the Edit and Delete buttons
+                document.getElementById('editTaskBtn').href = info.event.extendedProps.editUrl;
+                document.getElementById('deleteTaskBtn').href = info.event.extendedProps.deleteUrl;
+    
+                // Show the modal
+                var myModal = new bootstrap.Modal(document.getElementById('taskDetailsModal'));
+                myModal.show();
+            },
+            eventRender: function(info) {
+                // Customize the event appearance if needed
+                if (info.event.extendedProps.isHoliday) {
+                    // Example: set a specific color for holidays
+                    info.el.style.backgroundColor = '#ff9f89';
+                    info.el.style.borderColor = '#ff9f89';
+                    info.el.style.color = '#000000';
+                }
             }
-        }
+        });
+    
+        calendar.render();
     });
-
-    calendar.render();
-  });
 </script>
 {% endblock %}

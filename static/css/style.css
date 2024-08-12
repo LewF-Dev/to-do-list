@@ -23,6 +23,12 @@ header .h1 {
     margin-right: 10px;
 }
 
+.task-list-container {
+    position: relative;
+    min-height: 100vh; /* Ensure full height to account for the footer */
+    padding-bottom: 60px; /* Space for the button */
+}
+
 .task-list li {
     padding: 15px;
     background-color: #f8f9fa;

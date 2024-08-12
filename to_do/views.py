@@ -15,6 +15,8 @@ def index(request):
     selected_date = request.GET.get('date')
     if selected_date:
         tasks = tasks.filter(date=selected_date)  # Filter tasks by the selected date
+    else:
+        selected_date = datetime.now().strftime('%Y-%m-%d')  # Default to current date
 
     # Convert tasks to a JSON format for FullCalendar
     events = [
@@ -73,6 +75,7 @@ def completed_tasks(request):
 
 @login_required
 def add_task(request):
+    initial_date = request.GET.get('date')  # Get the date from the query parameter if available
     if request.method == 'POST':
         form = TaskForm(request.POST, request.FILES)
         if form.is_valid():
