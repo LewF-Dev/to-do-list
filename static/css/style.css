@@ -29,6 +29,8 @@ header .h1 {
     border: 1px solid #dee2e6;
     border-radius: 5px;
     margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .task-list li strong {
@@ -40,16 +42,19 @@ header .h1 {
     color: #666;
 }
 
-/* Updated CSS for Complete button */
+/* Updated CSS for buttons */
 .task-list .btn-group {
     display: flex;
-    flex-direction: column;
-    align-items: stretch; /* Align buttons to stretch and take the full width */
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 10px;
 }
 
 .task-list .btn-group .btn {
-    width: 100%; /* Make all buttons in the group take full width */
-    margin-bottom: 5px; /* Add some space between the buttons */
+    flex-grow: 1;
+    margin-right: 5px; /* Add space between buttons */
+    white-space: nowrap; /* Prevent text from wrapping inside buttons */
+    text-align: center;
 }
 
 .task-list .btn-group .btn-complete {
@@ -117,14 +122,28 @@ footer {
         width: 40px;
         height: 40px;
     }
-    
+
     .task-list li {
         font-size: 14px;
     }
 
     .task-list .btn {
-        padding: 2px 8px;
-        font-size: 10px;
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .task-list .btn-group {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .task-list .btn-group .btn {
+        margin-bottom: 5px; /* Add space between buttons when stacked */
+    }
+
+    .task-list .btn-group .btn-complete {
+        margin-top: 5px;
     }
 
     #taskTitle {
@@ -149,28 +168,22 @@ footer {
     }
 }
 
-@media (min-width: 768px) {
-    #editTaskBtn, #deleteTaskBtn {
-        font-size: 1rem; /* Smaller font size for desktop */
-        padding: 10px 15px; /* Less padding for desktop */
-    }
-
-    .modal-footer {
-        position: relative;
-    }
-}
-
-@media (max-width: 991.98px) {
-    .header-left,
-    .header-right {
+/* Tablet-specific Adjustments */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .task-list .btn-group {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
         width: 100%;
-        justify-content: center;
     }
 
-    .task-list,
-    .important-task,
-    .stats {
-        width: 100%;
+    .task-list .btn-group .btn {
+        flex-grow: 1;
+        margin-right: 5px;
+    }
+
+    .task-list .btn-group .btn-complete {
+        flex-grow: 1;
     }
 }
 
