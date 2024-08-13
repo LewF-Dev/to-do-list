@@ -35,20 +35,27 @@ def index(request):
     country_code = "GB"  # Replace with the appropriate country code
     holidays = fetch_holidays(api_key, country_code)
 
+    # Print the holidays to ensure they're being fetched correctly
+    print(f"Holidays fetched: {holidays}")
+
     if holidays:
-        # Convert holidays to the same event format
+        # Convert holidays to the same event format and add isHoliday flag
         holiday_events = [
             {
                 "title": holiday['name'],
                 "start": holiday['date']['iso'],  # Use the ISO date format
-                "description": holiday['description'] if 'description' in holiday else 'Holiday',  # Use description if available
+                "description": holiday.get('description', 'Holiday'),  # Use description if available
                 "backgroundColor": "#ff9f89",  # Example color for holiday events
                 "borderColor": "#ff9f89",  # Example border color for holiday events
                 "textColor": "#000000",  # Example text color for holiday events
+                "isHoliday": True  # Mark this event as a holiday
             }
             for holiday in holidays
         ]
         events.extend(holiday_events)  # Add holiday events to the existing events list
+
+    # Print the final events list to debug
+    print(f"Final events: {events}")
 
     events_json = json.dumps(events, cls=DjangoJSONEncoder)
 
@@ -58,8 +65,10 @@ def index(request):
         'tasks': tasks,
         'events_json': events_json,
         'current_date': current_date,
-        'important_task': important_task
+        'important_task': important_task,
+        'selected_date': selected_date,  # Pass the selected date to the template
     })
+
 
 @login_required
 def complete_task(request, task_id):
@@ -84,7 +93,7 @@ def add_task(request):
             task.save()
             return redirect('index')
     else:
-        form = TaskForm()
+        form = TaskForm(initial={'date': initial_date})  # Pre-fill the date field if available
     return render(request, 'tasks/add_task.html', {'form': form})
 
 @login_required

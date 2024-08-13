@@ -109,28 +109,31 @@
             eventClick: function(info) {
                 // Prevent the default action
                 info.jsEvent.preventDefault();
+
+                // Check if the event is a holiday
+                var isHoliday = info.event.extendedProps.isHoliday;
     
+                // Set the modal title based on the event type
+                var modalTitle = isHoliday ? 'Holiday Details' : 'Task Details';
+                document.getElementById('taskDetailsModalLabel').innerText = modalTitle;
+
                 // Set the modal content
                 document.getElementById('taskTitle').innerText = info.event.title;
                 document.getElementById('taskDescription').innerText = info.event.extendedProps.description || 'No description available.';
                 document.getElementById('taskDate').innerText = info.event.start.toISOString().split('T')[0];
     
                 // Set the href for the Edit and Delete buttons
-                document.getElementById('editTaskBtn').href = info.event.extendedProps.editUrl;
+                if (!isHoliday) {
+                    document.getElementById('editTaskBtn').style.display = 'inline-block';
+                    document.getElementById('editTaskBtn').href = info.event.extendedProps.editUrl;
+                } else {
+                    document.getElementById('editTaskBtn').style.display = 'none';
+                }
                 document.getElementById('deleteTaskBtn').href = info.event.extendedProps.deleteUrl;
     
                 // Show the modal
                 var myModal = new bootstrap.Modal(document.getElementById('taskDetailsModal'));
                 myModal.show();
-            },
-            eventRender: function(info) {
-                // Customize the event appearance if needed
-                if (info.event.extendedProps.isHoliday) {
-                    // Example: set a specific color for holidays
-                    info.el.style.backgroundColor = '#ff9f89';
-                    info.el.style.borderColor = '#ff9f89';
-                    info.el.style.color = '#000000';
-                }
             }
         });
     
