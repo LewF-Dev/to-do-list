@@ -8,7 +8,8 @@ class Task(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='tasks/', blank=True, null=True)
     date = models.DateField(default=datetime.now)  # This line is already correct
-    completed = models.BooleanField(default=False)  # Add this line
+    time = models.TimeField(default=datetime.now)  # Add this line to store task time
+    completed = models.BooleanField(default=False)  # This line is correct
 
     def __str__(self):
         return self.title
