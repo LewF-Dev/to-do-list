@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h1 class="h3">Profile</h1>
+        <div class="row">
+            <div class="col-md-4 text-center">
+                {% if user.profile.profile_picture %}
+                    <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="img-fluid rounded-circle mb-3">
+                {% else %}
+                    <img src="{% static 'default_profile_pic.jpg' %}" alt="Profile Picture" class="img-fluid rounded-circle mb-3">
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.profile_picture }} <!-- This keeps only the image field -->
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                    <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

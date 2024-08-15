@@ -1,11 +1,19 @@
 from django import forms
-from .models import Task
+from .models import Task, Profile
 
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['title', 'description', 'image', 'date', 'time']  # Include 'date' and 'time' fields
+        fields = ['title', 'description', 'image', 'date', 'time']
         widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),  # This will use a date picker in HTML5
-            'time': forms.TimeInput(attrs={'type': 'time'})   # This will use a time picker in HTML5
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'time': forms.TimeInput(attrs={'type': 'time'})
+        }
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['profile_picture']
+        widgets = {
+            'profile_picture': forms.FileInput(attrs={'class': 'form-control-file'}),
         }

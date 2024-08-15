@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}Task List{% endblock %}
 
 {% block content %}
 <header class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
     <div class="header-left d-flex align-items-center mb-3 mb-md-0">
-        <img src="path_to_profile_image.jpg" alt="Profile Picture" class="profile-pic me-3">
+        <!-- Profile Picture -->
+        {% if profile_picture_url %}
+            <img src="{{ profile_picture_url }}" alt="Profile Picture" class="profile-pic me-3 rounded-circle" style="width: 50px; height: 50px;">
+        {% else %}
+            <img src="{% static 'default_profile_pic.jpg' %}" alt="Profile Picture" class="profile-pic me-3 rounded-circle" style="width: 50px; height: 50px;">
+        {% endif %}
         <h1 class="h3">Tasks</h1>
     </div>
     <div class="header-right d-flex align-items-center">
@@ -37,15 +44,21 @@
                 <a href="{% url 'add_task' %}?date={{ selected_date }}" class="btn btn-primary w-100">Add Task</a>
             </div>
         </section>
-        <section class="important-task col-lg-4 col-md-6 col-12">
-            <h2>Most Important Task</h2>
-            <p>{{ important_task }}</p>
-        </section>
-        <section class="stats col-lg-4 col-12">
-            <h2>Performance Based Statistics</h2>
-            <!-- Add statistics here -->
-        </section>
     </main>
+</div>
+
+<!-- Performance Based Statistics Section -->
+<div class="performance-stats-container mt-5">
+    <header class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <h1 class="h3">Performance Based Statistics</h1>
+    </header>
+
+    <section class="stats-list col-lg-8 col-md-10 col-12 mx-auto">
+        <div class="list-group-item">
+            <p>{{ important_task }}</p>
+            <!-- Add more statistics or content here as needed -->
+        </div>
+    </section>
 </div>
 
 <!-- Calendar Modal -->
