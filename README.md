@@ -16,7 +16,10 @@ The To-Do List application is a full-stack web application built using the Djang
 8. [Technologies Used](#technologies-used)
 9. [Security Considerations](#security-considerations)
 10. [Future Enhancements](#future-enhancements)
-11. [License](#license)
+11. [User Stories](#user-stories)
+12. [Challenges & Solutions](#challenges--solutions)
+13. [Acknowledgements](#acknowledgements)
+14. [License](#license)
 
 ## Project Purpose
 
@@ -44,6 +47,7 @@ This project demonstrates the full-stack development of a web application using 
 - Users who value a streamlined, no-nonsense interface with minimal distractions.
 
 ### Wireframes and Design Decisions
+
 The application's design is based on the principles of good UX:
 - **Information Hierarchy**: Tasks and controls are clearly organized for ease of use. Priority tasks are emphasized.
 - **User Control**: All user interactions provide immediate feedback. For example, when tasks are completed, the user receives confirmation.
@@ -55,18 +59,34 @@ Mockups for each page of the application, including:
 2. **Profile Page** - Allows users to update their profile picture and details.
 3. **Task Calendar** - Visualizes tasks on a calendar interface.
 
-Mockups and wireframes can be found in the `design/` folder in the project repository.
+### Wireframes
 
-## Data Model
+Here are some wireframes representing the design of the application for desktop and mobile views:
 
-The application consists of the following models:
-- **User**: Handled by Django's built-in `User` model, extended with a `Profile` model to include additional fields such as a profile picture.
-- **Task**: Stores user tasks, including title, description, image, date, and time.
+1. **Desktop Wireframe**
+   
+   ![Desktop Wireframe](images/to-do-list-desktop-wireframe.png)
 
-The relationships between these models are documented in `models.py` and are structured using Django’s ORM (Object-Relational Mapping). The database schema is designed to ensure data integrity and organization.
+2. **Mobile Wireframe**
+   
+   ![Mobile Wireframe](images/to-do-list-phone-wireframe.png)
+
+## Database Schema and Relationships
+
+The database schema consists of two primary relationships:
+1. **User - Profile**: A one-to-one relationship where each `User` has one `Profile`. The `Profile` stores additional information like the profile picture and bio.
+2. **User - Task**: A one-to-many relationship where each `User` can have many `Tasks`, but each `Task` belongs to only one `User`.
 
 ### ERD (Entity-Relationship Diagram)
-A visual ERD of the database schema can be found in the `design/` folder of the repository.
+
+The following ERD diagram illustrates the relationships between the main entities in the database schema. It shows the `User`, `Profile`, and `Task` tables, and the relationships between them.
+
+![Database Schema ERD](images/to-do-list-erd-diagram.png)
+
+- **User - Profile**: There is a one-to-one relationship between the `User` and `Profile` tables. Each user has exactly one profile.
+- **User - Task**: There is a one-to-many relationship between the `User` and `Task` tables. Each user can have multiple tasks, but each task is associated with only one user.
+
+This schema is designed to manage users' tasks efficiently, ensuring that each user can maintain their own profile and manage multiple tasks seamlessly.
 
 ## Installation and Setup
 
