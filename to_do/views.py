@@ -4,20 +4,26 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse
 from .models import Task, Profile
 from .forms import TaskForm, ProfileForm
-from datetime import datetime
+from django.utils import timezone
 from .fetch_holidays import fetch_holidays
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-
+from datetime import date
 
 @login_required
 def index(request):
+    # Get all incomplete tasks for the user
     tasks = Task.objects.filter(user=request.user, completed=False)
+    
+    # Get tasks for the current day by comparing only the date, not time
+    today = timezone.now().date()
+    todays_tasks = tasks.filter(date=today)
+
     selected_date = request.GET.get('date')
     if selected_date:
         tasks = tasks.filter(date=selected_date)
     else:
-        selected_date = datetime.now().strftime('%Y-%m-%d')
+        selected_date = today.strftime('%Y-%m-%d')
 
     events = [
         {
@@ -51,7 +57,7 @@ def index(request):
 
     events_json = json.dumps(events, cls=DjangoJSONEncoder)
 
-    current_date = datetime.now().strftime('%d / %m / %Y')
+    current_date = today.strftime('%d / %m / %Y')
     important_task = "Most important task description"
 
     # Pass the profile picture URL to the template
@@ -60,12 +66,14 @@ def index(request):
 
     return render(request, 'tasks/index.html', {
         'tasks': tasks,
+        'todays_tasks': todays_tasks,  # Add today's tasks to the context
         'events_json': events_json,
         'current_date': current_date,
         'important_task': important_task,
         'selected_date': selected_date,
-        'profile_picture_url': profile_picture_url,  # Add this line
+        'profile_picture_url': profile_picture_url,
     })
+
 
 @login_required
 def complete_task(request, task_id):
@@ -74,16 +82,18 @@ def complete_task(request, task_id):
     task.save()
     return redirect('index')
 
+
 @login_required
 def completed_tasks(request):
     tasks = Task.objects.filter(user=request.user, completed=True)
     return render(request, 'tasks/completed_tasks.html', {'tasks': tasks})
 
+
 @login_required
 def add_task(request):
     initial_date = request.GET.get('date')
     if request.method == 'POST':
-        form = TaskForm(request.POST, request.FILES)
+        form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
             task.user = request.user
@@ -93,17 +103,19 @@ def add_task(request):
         form = TaskForm(initial={'date': initial_date})
     return render(request, 'tasks/add_task.html', {'form': form})
 
+
 @login_required
 def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     if request.method == 'POST':
-        form = TaskForm(request.POST, request.FILES, instance=task)
+        form = TaskForm(request.POST, instance=task)
         if form.is_valid():
             form.save()
             return redirect('index')
     else:
         form = TaskForm(instance=task)
     return render(request, 'tasks/edit_task.html', {'form': form})
+
 
 @login_required
 def delete_task(request, task_id):
@@ -112,6 +124,7 @@ def delete_task(request, task_id):
         task.delete()
         return redirect('index')
     return render(request, 'tasks/confirm_delete.html', {'task': task})
+
 
 @login_required
 def profile(request):

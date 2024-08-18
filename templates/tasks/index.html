@@ -13,7 +13,7 @@
         {% else %}
             <img src="{% static 'default_profile_pic.jpg' %}" alt="Profile Picture" class="profile-pic me-3 rounded-circle" style="width: 50px; height: 50px;">
         {% endif %}
-        <h1 class="h3">Tasks</h1>
+        <h1 class="h3 mt-3">Tasks</h1>
     </div>
     <div class="header-right d-flex align-items-center">
         <span class="date me-2">{{ current_date }}</span>
@@ -21,21 +21,47 @@
     </div>
 </header>
 
-<div class="task-list-container">
-    <main class="row g-3">
-        <section class="task-list col-lg-4 col-md-6 col-12">
+<div class="row g-3">
+    <div class="col-md-8">
+        <!-- Today's Tasks Section -->
+        <section class="todays-tasks-container mb-5">
+            <h3 class="mb-3">Today's Tasks</h3>
+            <ul class="list-group">
+                {% if todays_tasks %}
+                    {% for task in todays_tasks %}
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong>{{ task.title }}</strong><br>
+                            <span class="text-muted">{{ task.date }} - {{ task.time }}</span><br>
+                            <span>{{ task.description }}</span>
+                        </div>
+                        <span class="btn-group">
+                            <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                            <a href="{% url 'complete_task' task.id %}" class="btn btn-sm btn-outline-success">Complete</a> <!-- btn-outline-success used -->
+                        </span>
+                    </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item">No tasks for today.</li>
+                {% endif %}
+            </ul>
+        </section>
+
+        <!-- All Tasks Section -->
+        <section class="task-list">
             <ul class="list-group">
                 {% for task in tasks %}
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div>
                         <strong>{{ task.title }}</strong><br>
-                        <span class="text-muted">{{ task.date }}</span><br>
+                        <span class="text-muted">{{ task.date }} - {{ task.time }}</span><br>
                         <span>{{ task.description }}</span>
                     </div>
                     <span class="btn-group">
                         <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
                         <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
-                        <a href="{% url 'complete_task' task.id %}" class="btn btn-sm btn-outline-success btn-complete">Complete</a>
+                        <a href="{% url 'complete_task' task.id %}" class="btn btn-sm btn-outline-success">Complete</a> <!-- btn-outline-success used -->
                     </span>
                 </li>
                 {% endfor %}
@@ -44,7 +70,7 @@
                 <a href="{% url 'add_task' %}?date={{ selected_date }}" class="btn btn-primary w-100">Add Task</a>
             </div>
         </section>
-    </main>
+    </div>
 </div>
 
 <!-- Performance Based Statistics Section -->
