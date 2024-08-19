@@ -48,6 +48,21 @@ header .h1 {
     color: #666;
 }
 
+.task-description {
+    margin-top: 10px; /* Added margin-top to create spacing for the task description */
+}
+
+/* Updated styling for task date and time to stack */
+.task-date, .task-time {
+    display: block;
+    font-size: 14px;
+    color: #666;
+}
+
+.task-time {
+    margin-top: 5px; /* Add space between date and time */
+}
+
 /* Updated CSS for buttons */
 .task-list .btn-group {
     display: flex;
@@ -249,9 +264,6 @@ footer {
 .back-button-wrapper .btn {
     width: 100%; /* Ensure the button takes up the full width of the wrapper */
 }
-
-
-
 
 /* Adjust button size for phone displays */
 @media (max-width: 767.98px) {
