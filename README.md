@@ -196,15 +196,11 @@ This schema is designed to manage users' tasks efficiently, ensuring that each u
 
 ## User Stories
 
-- **As a user**, I want to create tasks with a title, description, date, and time so I can manage my schedule.
+**Agile Methodology and Project Management**
 
-- **As a user**, I want to mark tasks as complete so I can track my progress.
+To effectively manage the development of this project, I chose to use Trello as my Agile project management tool. Trello allowed me to organize user stories, track tasks, and manage the workflow efficiently through different stages of development, from "To Do" to "Done." Below is a screenshot of my Trello board, demonstrating how I planned and executed the project using Agile practices.
 
-- **As a user**, I want to update my profile picture and display name to personalize my account.
-
-- **As a user**, I want to view my tasks on a calendar so I can see them by date.
-
-- **As a user**, I want to toggle between light and dark modes based on my preference.
+![Mobile Wireframe](images/trello-board-screenshot-to-do-list-project.png)
 
 ## Challenges & Solutions
 
@@ -224,6 +220,10 @@ This schema is designed to manage users' tasks efficiently, ensuring that each u
 - **Bootstrap**: For offering a responsive framework that made UI design easier.
 
 - **FullCalendar.js**: For providing a robust calendar integration.
+
+- **ChatGPT**: for providing valuable insights, coding assistance, and answering technical queries throughout the development process. Its guidance was instrumental in overcoming challenges and enhancing the functionality of the application.
+
+
 
 ## License
 The MIT License (MIT)
