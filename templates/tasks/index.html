@@ -38,7 +38,7 @@
                         <span class="btn-group">
                             <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
                             <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
-                            <a href="{% url 'complete_task' task.id %}" class="btn btn-sm btn-outline-success">Complete</a> <!-- btn-outline-success used -->
+                            <a href="{% url 'complete_task' task.id %}" class="btn btn-sm btn-outline-success">Complete</a>
                         </span>
                     </li>
                     {% endfor %}
@@ -61,7 +61,7 @@
                     <span class="btn-group">
                         <a href="{% url 'edit_task' task.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
                         <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
-                        <a href="{% url 'complete_task' task.id %}" class="btn btn-sm btn-outline-success">Complete</a> <!-- btn-outline-success used -->
+                        <a href="{% url 'complete_task' task.id %}" class="btn btn-sm btn-outline-success">Complete</a>
                     </span>
                 </li>
                 {% endfor %}
@@ -135,33 +135,27 @@
     
         // Parse the JSON passed from the view
         var events = JSON.parse('{{ events_json|escapejs }}');
-    
-        // Initialize the calendar with the events
+
+        // Calendar initialization
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             events: events, 
             dateClick: function(info) {
-                // Redirect to the page that shows tasks for the selected date
-                var selectedDate = info.dateStr; // Format: YYYY-MM-DD
+                var selectedDate = info.dateStr;
                 window.location.href = '{% url "index" %}?date=' + selectedDate;
             },
             eventClick: function(info) {
-                // Prevent the default action
                 info.jsEvent.preventDefault();
 
-                // Check if the event is a holiday
                 var isHoliday = info.event.extendedProps.isHoliday;
     
-                // Set the modal title based on the event type
                 var modalTitle = isHoliday ? 'Holiday Details' : 'Task Details';
                 document.getElementById('taskDetailsModalLabel').innerText = modalTitle;
 
-                // Set the modal content
                 document.getElementById('taskTitle').innerText = info.event.title;
                 document.getElementById('taskDescription').innerText = info.event.extendedProps.description || 'No description available.';
                 document.getElementById('taskDate').innerText = info.event.start.toISOString().split('T')[0];
-    
-                // Set the href for the Edit and Delete buttons
+
                 if (!isHoliday) {
                     document.getElementById('editTaskBtn').style.display = 'inline-block';
                     document.getElementById('editTaskBtn').href = info.event.extendedProps.editUrl;
@@ -169,14 +163,16 @@
                     document.getElementById('editTaskBtn').style.display = 'none';
                 }
                 document.getElementById('deleteTaskBtn').href = info.event.extendedProps.deleteUrl;
-    
-                // Show the modal
+
                 var myModal = new bootstrap.Modal(document.getElementById('taskDetailsModal'));
                 myModal.show();
             }
         });
-    
-        calendar.render();
+
+        // Render calendar when modal is shown
+        document.getElementById('calendarModal').addEventListener('shown.bs.modal', function () {
+            calendar.render();
+        });
     });
 </script>
 {% endblock %}
