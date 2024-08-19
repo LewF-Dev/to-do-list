@@ -66,7 +66,7 @@ def index(request):
 
     return render(request, 'tasks/index.html', {
         'tasks': tasks,
-        'todays_tasks': todays_tasks,  # Add today's tasks to the context
+        'todays_tasks': todays_tasks,
         'events_json': events_json,
         'current_date': current_date,
         'important_task': important_task,
@@ -135,7 +135,7 @@ def profile(request):
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            return redirect('index')  # Redirect to the home page after updating the profile
     else:
         form = ProfileForm(instance=profile)
 
