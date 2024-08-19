@@ -13,7 +13,7 @@ class TaskForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['profile_picture']
+        fields = ['profile_picture', 'display_name']  # Added display_name to form
         widgets = {
             'profile_picture': forms.FileInput(attrs={'class': 'form-control-file'}),
         }

@@ -13,7 +13,14 @@
         {% else %}
             <img src="{% static 'default_profile_pic.jpg' %}" alt="Profile Picture" class="profile-pic me-3 rounded-circle" style="width: 50px; height: 50px;">
         {% endif %}
-        <h1 class="h3 mt-3">Tasks</h1>
+        <!-- Display name or username -->
+        <h1 class="h3 mt-3">
+            {% if user.profile.display_name %}
+                {{ user.profile.display_name }}
+            {% else %}
+                {{ user.username }}
+            {% endif %}
+        </h1>
     </div>
     <div class="header-right d-flex align-items-center">
         <span class="date me-2">{{ current_date }}</span>

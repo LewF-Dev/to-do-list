@@ -19,7 +19,14 @@
             <div class="col-md-8">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ form.profile_picture }} <!-- This keeps only the image field -->
+                    <div class="mb-3">
+                        <label for="display_name" class="form-label">Display Name</label>
+                        {{ form.display_name }}  <!-- This allows the user to set the display name -->
+                    </div>
+                    <div class="mb-3">
+                        <label for="profile_picture" class="form-label">Profile Picture</label>
+                        {{ form.profile_picture }}
+                    </div>
                     <button type="submit" class="btn btn-primary">Update Profile</button>
                     <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>
                 </form>
