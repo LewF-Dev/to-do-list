@@ -4,10 +4,10 @@ from django.dispatch import receiver
 from .models import Profile
 
 @receiver(post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs):
+def create_or_update_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_profile(sender, instance, **kwargs):
-    instance.profile.save()
+        # Only create a profile if one doesn't already exist
+        Profile.objects.get_or_create(user=instance)
+    else:
+        # Update the profile if the user is being saved and the profile already exists
+        instance.profile.save()
