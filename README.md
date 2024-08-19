@@ -139,11 +139,11 @@ This schema is designed to manage users' tasks efficiently, ensuring that each u
 
 #### Testing for this project involved:
 
-- **Unit Tests**: Written for individual components like task creation, task completion, profile updates, etc.
+- **Unit Tests**: Unit testing was conducted for individual components and features within the application. These tests primarily focused on verifying the correct behavior of key functions and methods. Examples include task creation (ensuring that tasks are created with the correct attributes such as title, date, and time), task completion (verifying that the task status updates correctly upon marking it as complete), and profile updates (checking that the user can successfully update their profile picture and display name). These tests helped isolate bugs early by ensuring each component worked as intended independently of the others.
 
-- **Integration Tests**: Ensure that various parts of the application (e.g., task management and calendar integration) work together correctly.
+- **Integration Tests**: Integration tests were implemented to ensure that various components of the application functioned together seamlessly. For instance, tests were written to verify the proper interaction between the task management system and the calendar integration. These tests confirmed that task data could be correctly serialized, passed to the calendar, and displayed in the appropriate slots based on date. Similarly, the interaction between the profile management system and the task list header was tested to ensure that display names and profile pictures were reflected in real-time upon update. These integration tests helped to catch any issues arising from the interaction between different parts of the system.
 
-- **Manual Testing**: Performed for responsive design and user interactions across different devices.
+- **Manual Testing**: Manual testing was extensively performed to ensure the application's responsiveness and smooth user interactions across a variety of devices and browsers. This included testing for correct layout and functionality on desktop, tablet, and mobile devices, ensuring that the app maintains an optimal user experience on screens of all sizes. Manual testing also focused on interactions such as form submissions, navigation, task editing, and profile management, verifying that users received appropriate feedback for every action. Additionally, edge cases were tested manually, such as handling incorrect form inputs and user navigation to non-existent pages, to ensure the app handles errors gracefully. This manual testing ensured the application adhered to modern UX principles and accessibility standards.
 
 
 ## Technologies Used
