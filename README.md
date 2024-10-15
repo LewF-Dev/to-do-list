@@ -126,14 +126,72 @@ This schema is designed to manage users' tasks efficiently, ensuring that each u
    python manage.py runserver      
 
 ## Deployment
-### To deploy the application, you can use platforms such as:
 
-- Heroku
+This application is deployed on Heroku, a cloud-based platform ideal for deploying full-stack applications. Below are the steps taken to deploy the project, including the necessary commands and configurations. These steps can be used by anyone looking to replicate the deployment process.
 
-- DigitalOcean
+### Prerequisites
 
-- AWS
+- Ensure you have a Heroku account and the Heroku CLI installed.
 
+- Set up a PostgreSQL database (e.g., with Heroku Postgres or another managed database 
+  provider) since this project uses PostgreSQL in production.
+
+### Step-by-Step Deployment Guide
+
+1. ***Create a New Heroku App***:
+
+   ```bash
+   heroku create <your-app-name>
+-This command initializes a new Heroku app and sets up a remote Git repository that 
+ points to Heroku.
+
+2. ***Set Up Environment Variables***:
+- In Heroku, navigate to your app dashboard.
+- Under "Settings," click on "Reveal Config Vars."
+- Add the following environment variables:
+
+  - `DATABASE_URL`: The URL of your PostgreSQL database.
+
+  - `SECRET_KEY`: A unique Django secret key.
+  - Any other sensitive variables from `env.py`, such as API keys for third-party services.
+
+
+3. ***Prepare the Application for Deployment***:
+- Make sure the `Procfile` is set up with:
+
+   ```plaintext
+   web: gunicorn <your_project_name>.wsgi
+- Ensure `requirements.txt` includes `gunicorn` for running the app in a production environment.  
+
+4. ***Update Django Settings for Production***:
+- Set `DEBUG = False` in your `settings.py` to prevent detailed error messages in production.
+- Allow Heroku's domain in `ALLOWED_HOSTS`:
+
+   ```python
+   ALLOWED_HOSTS = ['<your-app-name>.herokuapp.com']
+5. ***Deploy to Heroku***:
+- Commit any final changes:
+   ```bash
+   git add .
+   git commit -m "Prepare for Heroku deployment"
+- Push to Heroku:
+   ```bash
+   git push heroku main
+6. ***Run Database Migrations***:
+- Once deployed, run the following commands to apply database migrations on Heroku:
+   ```bash
+   heroku run python manage.py migrate
+7. ***Collect Static Files***:
+- Run the `collectstatic` command to gather static files for production:
+   ```bash
+   heroku run python manage.py collectstatic --noinput
+8. ***Open the Application***:
+- After deployment is complete, you can open your app with:
+   ```bash
+   heroku open
+**Testing deployment**
+
+After deploying, verify that the production app behaves as expected by testing all features, such as task management, profile updates, and calendar functionality. Ensure there are no debug messages visible in production, and that all sensitive information is secure.
 
 ## Testing
 
@@ -194,11 +252,13 @@ This schema is designed to manage users' tasks efficiently, ensuring that each u
 
 - **Collaboration Features**: Add the ability for users to share tasks with others or collaborate on group projects.
 
-## User Stories
+## Agile Methodology and Project Management
 
-**Agile Methodology and Project Management**
+**User Stories**
 
 To effectively manage the development of this project, I chose to use Trello as my Agile project management tool. Trello allowed me to organize user stories, track tasks, and manage the workflow efficiently through different stages of development, from "To Do" to "Done." Below is a screenshot of my Trello board, demonstrating how I planned and executed the project using Agile practices.
+
+[Trello Board](https://trello.com/invite/b/66adefdd1707236be0e94b4d/ATTI24b3f9b97614f96cd95dbadc9b8a0d3dFD3C2BF6/to-do-list)
 
 ![Mobile Wireframe](images/trello-board-screenshot-to-do-list-project.png)
 
