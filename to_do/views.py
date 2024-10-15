@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse
+from django.contrib import messages  # Import for notifications
 from .models import Task, Profile
 from .forms import TaskForm, ProfileForm
 from django.utils import timezone
@@ -12,10 +13,7 @@ from datetime import date
 
 @login_required
 def index(request):
-    # Get all incomplete tasks for the user
     tasks = Task.objects.filter(user=request.user, completed=False)
-    
-    # Get tasks for the current day by comparing only the date, not time
     today = timezone.now().date()
     todays_tasks = tasks.filter(date=today)
 
@@ -60,7 +58,6 @@ def index(request):
     current_date = today.strftime('%d / %m / %Y')
     important_task = "Most important task description"
 
-    # Pass the profile picture URL to the template
     profile = Profile.objects.get(user=request.user)
     profile_picture_url = profile.profile_picture.url if profile.profile_picture else None
 
@@ -80,6 +77,7 @@ def complete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     task.completed = True
     task.save()
+    messages.success(request, f'Task "{task.title}" marked as completed!')
     return redirect('index')
 
 
@@ -98,6 +96,7 @@ def add_task(request):
             task = form.save(commit=False)
             task.user = request.user
             task.save()
+            messages.success(request, 'Task created successfully!')
             return redirect('index')
     else:
         form = TaskForm(initial={'date': initial_date})
@@ -111,6 +110,7 @@ def edit_task(request, task_id):
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Task updated successfully!')
             return redirect('index')
     else:
         form = TaskForm(instance=task)
@@ -122,20 +122,21 @@ def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     if request.method == 'POST':
         task.delete()
+        messages.success(request, f'Task "{task.title}" deleted successfully!')
         return redirect('index')
     return render(request, 'tasks/confirm_delete.html', {'task': task})
 
 
 @login_required
 def profile(request):
-    # Ensure the profile exists for the user
     profile, created = Profile.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('index')  # Redirect to the home page after updating the profile
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('index')
     else:
         form = ProfileForm(instance=profile)
 
@@ -147,6 +148,7 @@ def signup(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Account created successfully! Please log in.')
             return redirect('login')
     else:
         form = UserCreationForm()
