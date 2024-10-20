@@ -195,13 +195,85 @@ After deploying, verify that the production app behaves as expected by testing a
 
 ## Testing
 
-#### Testing for this project involved:
+Testing for this project involved various levels of validation, including unit tests, integration tests, and detailed manual testing. Each test case was designed to assess functionality, usability, responsiveness, and data management across the entire web application. Below are the structured test cases conducted.
 
-- **Unit Tests**: Unit testing was conducted for individual components and features within the application. These tests primarily focused on verifying the correct behavior of key functions and methods. Examples include task creation (ensuring that tasks are created with the correct attributes such as title, date, and time), task completion (verifying that the task status updates correctly upon marking it as complete), and profile updates (checking that the user can successfully update their profile picture and display name). These tests helped isolate bugs early by ensuring each component worked as intended independently of the others.
+### 1. Unit Tests
+Unit testing was conducted for individual components and functions within the application. These tests primarily focused on verifying the correct behavior of key functions and methods:
 
-- **Integration Tests**: Integration tests were implemented to ensure that various components of the application functioned together seamlessly. For instance, tests were written to verify the proper interaction between the task management system and the calendar integration. These tests confirmed that task data could be correctly serialized, passed to the calendar, and displayed in the appropriate slots based on date. Similarly, the interaction between the profile management system and the task list header was tested to ensure that display names and profile pictures were reflected in real-time upon update. These integration tests helped to catch any issues arising from the interaction between different parts of the system.
+- **Task Creation**: Ensured that tasks could be created with the correct attributes (title, description, date, and time).
+- **Task Completion**: Verified that the task status updates correctly when marked as complete.
+- **Profile Updates**: Ensured that users can update their profile picture and display name without issues.
 
-- **Manual Testing**: Manual testing was extensively performed to ensure the application's responsiveness and smooth user interactions across a variety of devices and browsers. This included testing for correct layout and functionality on desktop, tablet, and mobile devices, ensuring that the app maintains an optimal user experience on screens of all sizes. Manual testing also focused on interactions such as form submissions, navigation, task editing, and profile management, verifying that users received appropriate feedback for every action. Additionally, edge cases were tested manually, such as handling incorrect form inputs and user navigation to non-existent pages, to ensure the app handles errors gracefully. This manual testing ensured the application adhered to modern UX principles and accessibility standards.
+These tests isolated specific functionalities, confirming each component worked as intended independently of the others.
+
+### 2. Integration Tests
+Integration tests were performed to validate the proper interaction between different parts of the application, ensuring seamless functionality across the stack:
+
+- **Task Management and Calendar Integration**: Verified that task data could be serialized and displayed on the calendar, confirming tasks appear on the correct dates.
+- **Profile Management and Task List**: Checked that the user’s display name and profile picture are reflected in the task list and user header in real-time.
+
+These tests ensured that various sections of the application could interact correctly, reducing potential bugs from interconnected components.
+
+### 3. Manual Testing
+The manual testing process involved objective, detailed test cases to verify expected outcomes for typical user actions. Both expected and unexpected scenarios were tested to verify how the application handles different flows.
+
+#### Test Cases
+
+| Test Case                          | Expected Outcome                                                                 | Steps                                                                                                                                                          | Result                                                                                       |
+|------------------------------------|----------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| **1. Login Functionality**         | User should be able to log in successfully with correct credentials               | 1. Go to login page<br>2. Enter valid credentials<br>3. Click login button                                              | User logged in successfully and redirected to home page.                                     |
+|                                    | Error message shown for incorrect credentials                                    | 1. Go to login page<br>2. Enter incorrect credentials<br>3. Click login button                                          | Error message displayed: "Please enter a correct username and password. Note that both fields may be case-sensitive.".                                     |
+| **2. Task Creation**               | User should be able to create a task                                             | 1. From the home page, click the "Add Task" button<br>2. Fill out title, description, date, and time<br>3. Click "Add Task"                     | Task appears on home page and in the calendar view. Notification appears at the top of the page saying "Task created successfully!".                                          |
+|                                    | Error message for missing required fields                                        | 1. Click the "Add Task" button<br>2. Leave title empty<br>3. Click "Add task"                                              | Error message displayed: "Please fill in this field".                                           |
+| **3. Task Completion**             | User should be able to mark a task as complete                                   | 1. Go to home page<br>2. Click "Complete" button on an existing task                                                    | Task status updated to complete, task moves to completed section, notification saying "Task marked as completed!" appears at the top of the screen.                            |
+| **4. Task Deletion**               | User should be able to delete a task                                             | 1. Go to home page<br>2. Click "Delete" button on an existing task<br>3. Confirm deletion                               | Task is removed from the home page and calendar view, notifcation saying "Task deleted successfully!" appears at the top of the screen.                                        |
+| **5. Profile Update**              | User should be able to update profile picture and display name                   | 1. Click the user option in the navigation bar<br>2. Click the profile option in the dropdown menu<br>3. Change display name and choose an image file to be used as your profile picture<br>4. Click "Update Profile"                       | Profile picture and display name update successfully, notification saying "Profile updated successfully!" appears at the top of the screen.          |
+| **6. Error Handling on Forms**     | Error messages should appear for invalid inputs                                  |                                | The date and time options for tasks only accept numeric inputs and no other pages consider any characters as invalid inputs,  therefore a situation where the user has used invalid inputs cannot occur.                             |
+| **7. Calendar Date Selection**     | User should be able to navigate to specific dates on the calendar and see any tasks or events that are on said date.                             | 1. Go to the calendar view by pressing the calendar button at the top right of the home page.<br>2. Use the on-screen arrow buttons to navigate to different months.                                                                          | Holiday periods, events and date-specific tasks are displayed on the correct dates, user can click on a specific task or event in the calendar view to see more information.                                      |
+| **8. Responsiveness Testing**      | Layout should adjust for mobile and desktop views                                | 1. Resize browser window to different screen sizes (mobile, tablet, desktop)                                            | Layout adapts properly, displaying content without overflow or cut-off issues.               |
+| **9. Logout Functionality**        | User should be able to log out successfully                                      | 1. Click on "User" in the navigation bar at the top left of any page, this will open a dropdown menu.<br>2. In the dropdown menu click "Logout"                                                                               | User is logged out and redirected to login page.                                             |
+| **10. On-Screen Notifications**    | Notifications should appear for each CRUD operation                              | 1. Perform any CRUD operation (add, edit, delete task)<br>2. Observe notification                                      | Notifications appear at the top of the page confirming success of operation (e.g., "Task created successfully"). |
+
+#### Observed Results
+Each test was conducted following the documented steps, and results matched expected outcomes. Any discrepancies were documented and resolved through code adjustments.
+
+#### Edge Cases
+**Calendarific API rendering issue**: During testing, it was observed that when opening the calendar modal, the Calendarific API data wasn't properly rendering in the calendar view on initial load. This led to the calendar appearing blank until the browser window was resized or manually refreshed. Upon investigation, the issue was found to be related to the calendar’s rendering mechanism. The calendar was being initialized before the modal was fully displayed and ready, which caused it to miscalculate its dimensions and appear empty.
+
+- ***Resolution***: To resolve this issue, the calendar’s rendering function was tied to the modal’s `shown` event. By attaching the `calendar.render()` function to the event listener that triggers when the modal is fully displayed, the calendar is now properly rendered every time the modal is opened. The following code was added to handle this:
+
+```javascript
+document.getElementById('calendarModal').addEventListener('shown.bs.modal', function () {
+    calendar.render();
+});
+```
+<br>
+
+**Profile Creation Issue**: During testing, I encountered an error when a newly registered user attempted to log in. The error occurred because the application was trying to access the user's profile, but no profile had been created yet. This resulted in an exception and prevented users from accessing the app immediately after signing up.
+
+- ***Resolution***: To resolve this issue, I implemented Django signals to ensure that a `Profile` object is automatically created for every new user when they sign up. Using the `post_save` signal, a profile is created when a new `User` object is saved. This ensures that users have a profile upon their first login, avoiding any access issues related to missing profiles.
+
+<br>
+
+**Cloudinary API Configuration Error**: While integrating Cloudinary for media file storage, I encountered an error during profile image uploads. The error was related to missing Cloudinary API configuration values, causing the app to crash when attempting to handle image uploads.
+
+- ***Resolution***: I resolved this by ensuring that the necessary Cloudinary API credentials (`CLOUD_NAME`, `API_KEY`, `API_SECRET`) were added correctly in the environment variables and referenced in the `settings.py` file. I also verified that these variables were correctly set on the hosting platform (Heroku).
+
+<br>
+
+**Invalid Signature Error with Cloudinary**: During testing, I received an "Invalid Signature" error from Cloudinary when uploading images. This occurred because the signature generation for the image uploads was failing due to mismatched or incorrect API credentials.
+
+- ***Resolution***: The issue was resolved by regenerating the Cloudinary API keys, ensuring that the correct values were used in both the environment variables and the Cloudinary dashboard. I also confirmed that the Cloudinary URL in the environment variables matched the correct API configuration.
+
+<br>
+
+**Static Files Not Loading Properly in Production**: In production, I encountered an issue where static files (like CSS and JavaScript) were not loading correctly, causing the site layout to break. This was due to the fact that static files weren't being served properly in the Heroku environment.
+
+- ***Resolution***: I resolved this by adding the `Whitenoise` middleware to the Django settings, ensuring that static files are served correctly in production. Additionally, I verified that the `STATIC_ROOT`, `STATICFILES_DIRS`, and `STATIC_URL` settings were properly configured in the `settings.py` file. I also ran `collectstatic` to gather all static files into a single location for production.
+
+
+### Summary
+Most test cases passed as expected, demonstrating the functionality of the application in typical use cases. For the few issues encountered, fixes were implemented as documented in the edge cases section, ensuring the application operates as intended after resolving those challenges.
 
 
 ## Technologies Used
