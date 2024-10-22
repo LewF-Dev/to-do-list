@@ -13,6 +13,13 @@ from datetime import date
 
 @login_required
 def index(request):
+    """
+    View for displaying the home page with tasks and calendar events.
+
+    Retrieves tasks for the logged-in user and filters them by today's date. 
+    Fetches holiday data via an external API and passes it along with tasks and profile information 
+    to the template for rendering.
+    """
     tasks = Task.objects.filter(user=request.user, completed=False)
     today = timezone.now().date()
     todays_tasks = tasks.filter(date=today)
@@ -23,6 +30,7 @@ def index(request):
     else:
         selected_date = today.strftime('%Y-%m-%d')
 
+    # Prepare task events for calendar display
     events = [
         {
             "title": task.title,
@@ -34,6 +42,7 @@ def index(request):
         for task in tasks
     ]
 
+    # Fetch holiday data from external API
     api_key = "8XGSItroiyWeOXGrvak1jgPrJflsnpxr"
     country_code = "GB"
     holidays = fetch_holidays(api_key, country_code)
@@ -58,6 +67,7 @@ def index(request):
     current_date = today.strftime('%d / %m / %Y')
     important_task = "Most important task description"
 
+    # Retrieve the profile picture URL
     profile = Profile.objects.get(user=request.user)
     profile_picture_url = profile.profile_picture.url if profile.profile_picture else None
 
@@ -74,6 +84,10 @@ def index(request):
 
 @login_required
 def complete_task(request, task_id):
+    """
+    Mark a task as completed for the current user and redirect to the home page.
+    A success message is displayed upon completion.
+    """
     task = get_object_or_404(Task, id=task_id, user=request.user)
     task.completed = True
     task.save()
@@ -83,12 +97,19 @@ def complete_task(request, task_id):
 
 @login_required
 def completed_tasks(request):
+    """
+    View for displaying all completed tasks of the logged-in user.
+    """
     tasks = Task.objects.filter(user=request.user, completed=True)
     return render(request, 'tasks/completed_tasks.html', {'tasks': tasks})
 
 
 @login_required
 def add_task(request):
+    """
+    Add a new task for the logged-in user. If the form is valid, 
+    the task is saved and the user is redirected to the home page.
+    """
     initial_date = request.GET.get('date')
     if request.method == 'POST':
         form = TaskForm(request.POST)
@@ -105,6 +126,10 @@ def add_task(request):
 
 @login_required
 def edit_task(request, task_id):
+    """
+    Edit an existing task for the logged-in user. If the form is valid,
+    the task is updated and the user is redirected to the home page.
+    """
     task = get_object_or_404(Task, id=task_id, user=request.user)
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
@@ -119,6 +144,10 @@ def edit_task(request, task_id):
 
 @login_required
 def delete_task(request, task_id):
+    """
+    Delete a task for the logged-in user. If the delete confirmation is submitted,
+    the task is deleted, and the user is redirected to the home page with a success message.
+    """
     task = get_object_or_404(Task, id=task_id, user=request.user)
     if request.method == 'POST':
         task.delete()
@@ -129,6 +158,10 @@ def delete_task(request, task_id):
 
 @login_required
 def profile(request):
+    """
+    View and update the logged-in user's profile. If the form is valid,
+    the profile is updated and the user is redirected to the home page.
+    """
     profile, created = Profile.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
@@ -144,6 +177,10 @@ def profile(request):
 
 
 def signup(request):
+    """
+    Register a new user. If the form is valid, a new user account is created
+    and the user is redirected to the login page.
+    """
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
