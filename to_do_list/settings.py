@@ -21,7 +21,7 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # Toggle between development and production modes
-DEBUG = True
+DEBUG = False
 
 # Hosts and trusted origins
 ALLOWED_HOSTS = ['.codeinstitute-ide.net', '.herokuapp.com', '.gitpod.io', 'localhost']
