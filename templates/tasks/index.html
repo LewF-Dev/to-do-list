@@ -129,10 +129,8 @@
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
     
-        // Parse the JSON passed from the view
         var events = JSON.parse('{{ events_json|escapejs }}');
 
-        // Calendar initialization
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             events: events, 
@@ -144,7 +142,7 @@
                 info.jsEvent.preventDefault();
 
                 var isHoliday = info.event.extendedProps.isHoliday;
-    
+
                 var modalTitle = isHoliday ? 'Holiday Details' : 'Task Details';
                 document.getElementById('taskDetailsModalLabel').innerText = modalTitle;
 
@@ -152,23 +150,32 @@
                 document.getElementById('taskDescription').innerText = info.event.extendedProps.description || 'No description available.';
                 document.getElementById('taskDate').innerText = info.event.start.toISOString().split('T')[0];
 
+                // Ensure delete URL is only attached if delete is clicked
+                var deleteBtn = document.getElementById('deleteTaskBtn');
+                deleteBtn.onclick = function() {
+                    if (!isHoliday) {
+                        window.location.href = info.event.extendedProps.deleteUrl;
+                    }
+                };
+
                 if (!isHoliday) {
                     document.getElementById('editTaskBtn').style.display = 'inline-block';
                     document.getElementById('editTaskBtn').href = info.event.extendedProps.editUrl;
+                    deleteBtn.style.display = 'inline-block'; // Show the delete button for tasks
                 } else {
                     document.getElementById('editTaskBtn').style.display = 'none';
+                    deleteBtn.style.display = 'none'; // Hide the delete button for holidays
                 }
-                document.getElementById('deleteTaskBtn').href = info.event.extendedProps.deleteUrl;
 
                 var myModal = new bootstrap.Modal(document.getElementById('taskDetailsModal'));
                 myModal.show();
             }
         });
 
-        // Render calendar when modal is shown
         document.getElementById('calendarModal').addEventListener('shown.bs.modal', function () {
             calendar.render();
         });
     });
 </script>
+
 {% endblock %}
