@@ -5,11 +5,12 @@
 {% block content %}
 <div class="container">
     <h1>Delete Task</h1>
+    <!-- Confirmation message before deleting the task -->
     <p>Are you sure you want to delete the task "{{ task.title }}"?</p>
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Yes, delete</button>
-        <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>
+        <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>  <!-- Cancel button to return to task list -->
     </form>
 </div>
 {% endblock %}

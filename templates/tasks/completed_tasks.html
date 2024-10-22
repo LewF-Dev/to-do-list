@@ -10,6 +10,7 @@
 <main class="row g-3">
     <section class="task-list col-lg-8 col-md-10 col-12">
         <ul class="list-group">
+            <!-- Loop through completed tasks -->
             {% for task in tasks %}
             <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div>
@@ -23,7 +24,7 @@
             </li>
             {% endfor %}
         </ul>
-        <!-- Wrap the button inside a div -->
+        <!-- Button to return to the task list -->
         <div class="back-button-wrapper">
             <a href="{% url 'index' %}" class="btn btn-primary mt-3 w-100">Back to Tasks</a>
         </div>
