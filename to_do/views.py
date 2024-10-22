@@ -15,10 +15,6 @@ from datetime import date
 def index(request):
     """
     View for displaying the home page with tasks and calendar events.
-
-    Retrieves tasks for the logged-in user and filters them by today's date. 
-    Fetches holiday data via an external API and passes it along with tasks and profile information 
-    to the template for rendering.
     """
     tasks = Task.objects.filter(user=request.user, completed=False)
     today = timezone.now().date()
@@ -119,6 +115,11 @@ def add_task(request):
             task.save()
             messages.success(request, 'Task created successfully!')
             return redirect('index')
+        else:
+            if form.non_field_errors():  # Only show specific validation error
+                messages.error(request, form.non_field_errors())
+            else:
+                messages.error(request, 'There was an error creating the task.')
     else:
         form = TaskForm(initial={'date': initial_date})
     return render(request, 'tasks/add_task.html', {'form': form})
@@ -137,6 +138,11 @@ def edit_task(request, task_id):
             form.save()
             messages.success(request, 'Task updated successfully!')
             return redirect('index')
+        else:
+            if form.non_field_errors():  # Only show specific validation error
+                messages.error(request, form.non_field_errors())
+            else:
+                messages.error(request, 'There was an error updating the task.')
     else:
         form = TaskForm(instance=task)
     return render(request, 'tasks/edit_task.html', {'form': form})

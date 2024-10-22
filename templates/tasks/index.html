@@ -128,44 +128,43 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
-    
     var events = JSON.parse('{{ events_json|escapejs }}');
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         events: events,
         eventDidMount: function(info) {
-            // Add the cursor style directly when rendering the events
-            info.el.style.cursor = 'pointer';
-        },
-        dateClick: function(info) {
-            var selectedDate = info.dateStr;
-            window.location.href = '{% url "index" %}?date=' + selectedDate;
+            info.el.style.cursor = 'pointer'; // Keep pointer cursor on events
         },
         eventClick: function(info) {
             info.jsEvent.preventDefault();
             
             var isHoliday = info.event.extendedProps.isHoliday;
-
             var modalTitle = isHoliday ? 'Holiday Details' : 'Task Details';
             document.getElementById('taskDetailsModalLabel').innerText = modalTitle;
-
             document.getElementById('taskTitle').innerText = info.event.title;
             document.getElementById('taskDescription').innerText = info.event.extendedProps.description || 'No description available.';
             document.getElementById('taskDate').innerText = info.event.start.toISOString().split('T')[0];
 
             var deleteBtn = document.getElementById('deleteTaskBtn');
-            deleteBtn.onclick = function() {
-                if (!isHoliday) {
-                    window.location.href = info.event.extendedProps.deleteUrl;
-                }
-            };
 
-            if (!isHoliday) {
-                document.getElementById('editTaskBtn').style.display = 'inline-block';
-                document.getElementById('editTaskBtn').href = info.event.extendedProps.editUrl;
+            // Hide the delete button if it's a holiday or non-task event
+            if (isHoliday) {
+                deleteBtn.style.display = 'none';
             } else {
-                document.getElementById('editTaskBtn').style.display = 'none';
+                deleteBtn.style.display = 'inline-block';
+                deleteBtn.onclick = function() {
+                    window.location.href = info.event.extendedProps.deleteUrl;
+                };
+            }
+
+            // Show or hide the edit button similarly
+            var editBtn = document.getElementById('editTaskBtn');
+            if (isHoliday) {
+                editBtn.style.display = 'none';
+            } else {
+                editBtn.style.display = 'inline-block';
+                editBtn.href = info.event.extendedProps.editUrl;
             }
 
             var myModal = new bootstrap.Modal(document.getElementById('taskDetailsModal'));
@@ -177,6 +176,8 @@
         calendar.render();
     });
 });
+
+
 
 </script>
 
