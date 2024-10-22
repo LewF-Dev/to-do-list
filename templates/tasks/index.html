@@ -127,55 +127,57 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
+    var calendarEl = document.getElementById('calendar');
     
-        var events = JSON.parse('{{ events_json|escapejs }}');
+    var events = JSON.parse('{{ events_json|escapejs }}');
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            events: events, 
-            dateClick: function(info) {
-                var selectedDate = info.dateStr;
-                window.location.href = '{% url "index" %}?date=' + selectedDate;
-            },
-            eventClick: function(info) {
-                info.jsEvent.preventDefault();
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: events,
+        eventDidMount: function(info) {
+            // Add the cursor style directly when rendering the events
+            info.el.style.cursor = 'pointer';
+        },
+        dateClick: function(info) {
+            var selectedDate = info.dateStr;
+            window.location.href = '{% url "index" %}?date=' + selectedDate;
+        },
+        eventClick: function(info) {
+            info.jsEvent.preventDefault();
+            
+            var isHoliday = info.event.extendedProps.isHoliday;
 
-                var isHoliday = info.event.extendedProps.isHoliday;
+            var modalTitle = isHoliday ? 'Holiday Details' : 'Task Details';
+            document.getElementById('taskDetailsModalLabel').innerText = modalTitle;
 
-                var modalTitle = isHoliday ? 'Holiday Details' : 'Task Details';
-                document.getElementById('taskDetailsModalLabel').innerText = modalTitle;
+            document.getElementById('taskTitle').innerText = info.event.title;
+            document.getElementById('taskDescription').innerText = info.event.extendedProps.description || 'No description available.';
+            document.getElementById('taskDate').innerText = info.event.start.toISOString().split('T')[0];
 
-                document.getElementById('taskTitle').innerText = info.event.title;
-                document.getElementById('taskDescription').innerText = info.event.extendedProps.description || 'No description available.';
-                document.getElementById('taskDate').innerText = info.event.start.toISOString().split('T')[0];
-
-                // Ensure delete URL is only attached if delete is clicked
-                var deleteBtn = document.getElementById('deleteTaskBtn');
-                deleteBtn.onclick = function() {
-                    if (!isHoliday) {
-                        window.location.href = info.event.extendedProps.deleteUrl;
-                    }
-                };
-
+            var deleteBtn = document.getElementById('deleteTaskBtn');
+            deleteBtn.onclick = function() {
                 if (!isHoliday) {
-                    document.getElementById('editTaskBtn').style.display = 'inline-block';
-                    document.getElementById('editTaskBtn').href = info.event.extendedProps.editUrl;
-                    deleteBtn.style.display = 'inline-block'; // Show the delete button for tasks
-                } else {
-                    document.getElementById('editTaskBtn').style.display = 'none';
-                    deleteBtn.style.display = 'none'; // Hide the delete button for holidays
+                    window.location.href = info.event.extendedProps.deleteUrl;
                 }
+            };
 
-                var myModal = new bootstrap.Modal(document.getElementById('taskDetailsModal'));
-                myModal.show();
+            if (!isHoliday) {
+                document.getElementById('editTaskBtn').style.display = 'inline-block';
+                document.getElementById('editTaskBtn').href = info.event.extendedProps.editUrl;
+            } else {
+                document.getElementById('editTaskBtn').style.display = 'none';
             }
-        });
 
-        document.getElementById('calendarModal').addEventListener('shown.bs.modal', function () {
-            calendar.render();
-        });
+            var myModal = new bootstrap.Modal(document.getElementById('taskDetailsModal'));
+            myModal.show();
+        }
     });
+
+    document.getElementById('calendarModal').addEventListener('shown.bs.modal', function () {
+        calendar.render();
+    });
+});
+
 </script>
 
 {% endblock %}
